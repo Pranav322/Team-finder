@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id                String   @id @default(cuid())
+  userEmail         String
+  projectowneremail String
+  projectId         String
+  status           String   @default("pending")
+  createdAt        DateTime @default(now())
+  project          Project  @relation(fields: [projectId], references: [id])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  techStack   String[]
+  userEmail   String
+  notifications Notification[]
+}
